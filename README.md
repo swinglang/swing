@@ -1,2 +1,2 @@
 # Whee
-Looking for samples? [Click Here.](/samples)
+Looking for samples? [Click Here.](/public/samples)
