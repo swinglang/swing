@@ -13,6 +13,6 @@ Whee is a powerful and versatile programming language designed to help you build
 Whee can be installed and used in various ways. Here is how to get started:
 ### Requirements:
 
-    ```glibc``` (on Linux and macOS)/ ```mingw-w64``` (on Windows)
-
-    ```git```
+    glibc (on Linux and macOS)/ mingw-w64 (on Windows)
+    
+    git
