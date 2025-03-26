@@ -60,6 +60,8 @@ Requirments:
 ```
 ### From wheepy
 WheePython (wheepy) alows you to run Whee inside Python.
+**Requires:**
+```Python 3.x```
 1. **Create a python venv (Optional, but recomended)**
 ```
 python3 -m venv wheepy-venv
