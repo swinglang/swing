@@ -1,4 +1,10 @@
 # Whee
-Create powerful projects, web apps, you name it with built in Web App Deployment and Automation, all by using a powerful programming language: Whee.
 
-Looking for samples? [Click Here.](/public/samples)
+## Features
+- Web App Deployment: Effortlessly deploy web applications directly using Whee's built-in tools.
+
+- Automation: Automate complex tasks in your projects with ease.
+
+- Powerful Programming Language: With a syntax that is easy to learn and powerful enough to handle complex tasks, Whee makes project development fast and efficient.
+
+- Cross-Platform: Whee runs on various platforms, making it a great choice for projects that need portability.
