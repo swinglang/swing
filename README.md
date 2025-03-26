@@ -7,12 +7,12 @@ Whee is a powerful and versatile programming language designed to help you build
 
 - Powerful Programming Language: With a syntax that is easy to learn and powerful enough to handle complex tasks, Whee makes project development fast and efficient.
 
-- Cross-Platform: Whee runs on``` various platforms, making it a great choice for projects that need portability.
+- Cross-Platform: Whee runs on various platforms, making it a great choice for projects that need portability.
 ## Installation
 
 Whee can be installed and used in various ways. Here is how to get started:
 ### Requirements:
 
-    ```glibc``` (on Linux and macOS)/```mingw-w64``` (on Windows)
+    ```glibc``` (on Linux and macOS)/ ```mingw-w64``` (on Windows)
 
     ```git```
