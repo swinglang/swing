@@ -1,0 +1,14 @@
+{
+    "print": {
+        "type": "function",
+        "replacement": "printf(\"%s\", %s);"
+    },
+    "var": {
+        "type": "variable",
+        "replacement": "%s %s = %s;"
+    },
+    "ref": {
+        "type": "input",
+        "replacement": "scanf(\"%s\", &%s);"
+    }
+}
