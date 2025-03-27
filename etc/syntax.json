@@ -1,14 +1,17 @@
 {
     "print": {
         "type": "function",
-        "replacement": "printf(\"%s\", %s);"
+        "pattern": "print\\((.*)\\);",
+        "replacement": "printf(\"%s\\n\", \\1);"
     },
     "var": {
         "type": "variable",
-        "replacement": "%s %s = %s;"
+        "pattern": "var = \"(.*)\";",
+        "replacement": "char \\1[100];"
     },
     "ref": {
         "type": "input",
-        "replacement": "scanf(\"%s\", &%s);"
+        "pattern": "ref (.*) >> (.*);",
+        "replacement": "scanf(\"%s\", &\\2);"
     }
 }
