@@ -1,13 +1,23 @@
 {
-    "print": {
+    "print_string": {
         "type": "function",
-        "pattern": "print\\((.*)\\);",
-        "replacement": "printf(\%s\\n\, \\1);"
+        "pattern": "print\\(\"(.*)\"\\);",
+        "replacement": "printf(\"%s\\n\", \\1);"
     },
-    "var": {
+    "print_number": {
+        "type": "function",
+        "pattern": "print\\((\\d+)\\);",
+        "replacement": "printf(\"%d\\n\", \\1);"
+    },
+    "var_string": {
         "type": "variable",
         "pattern": "var = \"(.*)\";",
         "replacement": "char \\1[100];"
+    },
+    "var_number": {
+        "type": "variable",
+        "pattern": "var = (\\d+);",
+        "replacement": "int \\1;"
     },
     "ref": {
         "type": "input",
