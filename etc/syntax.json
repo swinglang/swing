@@ -2,7 +2,7 @@
     "print": {
         "type": "function",
         "pattern": "print\\((.*)\\);",
-        "replacement": "printf(\"%s\\n\", \\1);"
+        "replacement": "printf(\%s\\n\, \\1);"
     },
     "var": {
         "type": "variable",
