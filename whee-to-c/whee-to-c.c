@@ -31,8 +31,17 @@ void convert_whee_to_c(const char *filename) {
             json_t *rule = json_object_get(grammar, command);
             if (rule) {
                 const char *replacement = json_string_value(json_object_get(rule, "replacement"));
-                printf(replacement, argument);
-                printf("\n");
+
+                // If it's a string replacement, apply it properly
+                if (strstr(replacement, "%s") != NULL) {
+                    // Apply string substitution manually for %s in the replacement string
+                    char formatted_replacement[1024];
+                    snprintf(formatted_replacement, sizeof(formatted_replacement), replacement, argument);
+                    printf("%s\n", formatted_replacement);
+                } else {
+                    printf(replacement, argument);
+                    printf("\n");
+                }
             } else {
                 printf("// Unrecognized command: %s\n", line);
             }
