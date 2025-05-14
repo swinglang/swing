@@ -23,5 +23,10 @@
         "type": "input",
         "pattern": "ref (.*) >> (.*);",
         "replacement": "scanf(\"%s\", &\\2);"
+    },
+    "int": {
+        "type": "function",
+        "pattern": "int (\\w+) \\{",
+        "replacement": "int \\1() {"
     }
 }
