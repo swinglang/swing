@@ -2,31 +2,31 @@
     "print_string": {
         "type": "function",
         "pattern": "print\\(\"(.*)\"\\);",
-        "replacement": "printf(\"%s\\n\", \\1);"
+        "replacement": "println!(\"{}\", \"\\1\");"
     },
     "print_number": {
         "type": "function",
         "pattern": "print\\((\\d+)\\);",
-        "replacement": "printf(\"%d\\n\", \\1);"
+        "replacement": "println!(\"{}\", \\1);"
     },
     "var_string": {
         "type": "variable",
         "pattern": "var = \"(.*)\";",
-        "replacement": "char \\1[100];"
+        "replacement": "let mut \\1 = String::from(\"\\1\");"
     },
     "var_number": {
         "type": "variable",
         "pattern": "var = (\\d+);",
-        "replacement": "int \\1;"
+        "replacement": "let mut var = \\1;"
     },
     "ref": {
         "type": "input",
-        "pattern": "ref (.*) >> (.*);",
-        "replacement": "scanf(\"%s\", &\\2);"
+        "pattern": "ref (\\w+) >> (\\w+);",
+        "replacement": "std::io::stdin().read_line(&mut \\2).unwrap();"
     },
     "int": {
         "type": "function",
         "pattern": "int (\\w+) \\{",
-        "replacement": "int \\1() {"
+        "replacement": "fn \\1() {"
     }
 }
