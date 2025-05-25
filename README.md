@@ -7,4 +7,4 @@ Whee is a powerful and versatile programming language designed to help you build
 - Powerful Programming Language: With a syntax that is easy to learn and powerful enough to handle complex tasks, Whee makes project development fast and efficient.
 ## Links
 - [Installation Instructions](/INSTALL.md)
-- [Documentation](https://whee.leon8326.org/docs)
+- [Documentation](https://docs.wheedev.org)
