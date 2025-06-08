@@ -23,7 +23,7 @@ fn main() {
         .expect("Failed to execute whee_rust");
 
     if !output.status.success() {
-        eprintln!("Error: whee-rust failed");
+        eprintln!("Error: whee_rust failed");
         std::process::exit(1);
     }
 
