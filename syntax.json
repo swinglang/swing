@@ -58,5 +58,10 @@
       "type": "function",
       "pattern": "^\\s*system\\(\"(.+)\"\\);\\s*$",
       "replacement": "Command::new(\"sh\").arg(\"-c\").arg(\"\\1\").status().expect(\"failed to execute command\");"
+    },
+    "shebang_comment": {
+        "type": "preprocess",
+        "pattern": "^#!(.*)$",
+        "replacement": "// \\1"
     }
 }
