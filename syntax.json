@@ -59,9 +59,59 @@
       "pattern": "^\\s*system\\(\"(.+)\"\\);\\s*$",
       "replacement": "Command::new(\"sh\").arg(\"-c\").arg(\"\\1\").status().expect(\"failed to execute command\");"
     },
-    "shebang_comment": {
-        "type": "preprocess",
-        "pattern": "^#!(.*)$",
-        "replacement": "// \\1"
+    "if": {
+      "type": "control",
+      "pattern": "^\\s*if\\s+\\((.*?)\\)\\s*\\{\\s*$",
+      "replacement": "if \\1 {"
+    },
+   "else": {
+      "type": "control",
+      "pattern": "^\\s*else\\s*\\{\\s*$",
+      "replacement": "else {"
+    },
+    "for_loop": {
+      "type": "loop",
+      "pattern": "^\\s*for\\s+(\\w+)\\s+in\\s+(\\w+)\\s*\\{\\s*$",
+      "replacement": "for \\1 in \\2 {"
+    },
+    "while_loop": {
+      "type": "loop",
+      "pattern": "^\\s*while\\s+\\((.*?)\\)\\s*\\{\\s*$",
+      "replacement": "while \\1 {"
+    },
+    "comment_hash": {
+      "type": "meta",
+      "pattern": "^\\s*#(.*)$",
+      "replacement": "// \\1"
+    },
+    "import_rust_std": {
+      "type": "meta",
+      "pattern": "^\\s*importrs\\s+(std::[\\w:]+);\\s*$",
+      "replacement": "use \\1;"
+    },
+    "import_rust_alias": {
+      "type": "meta",
+      "pattern": "^\\s*importrs\\s+(std::[\\w:]+)\\s+as\\s+(\\w+);\\s*$",
+      "replacement": "use \\1 as \\2;"
+    },
+    "add_numbers": {
+      "type": "math",
+      "pattern": "^\\s*add\\s+(\\d+)\\s+and\\s+(\\d+)\\s+>>\\s+(\\w+);$",
+      "replacement": "let \\3 = \\1 + \\2;"
+    },
+    "return": {
+      "type": "function",
+      "pattern": "^\\s*return\\s+(.*);$",
+      "replacement": "return \\1;"
+    },
+    "thread_block": {
+      "type": "meta",
+      "pattern": "^\\s*thread\\s+(\\w+)\\s*\\{\\s*$",
+      "replacement": "let \\1 = std::thread::spawn(|| {"
+    },
+    "thread_end": {
+      "type": "meta",
+      "pattern": "^\\s*endthread\\s*$",
+      "replacement": "});"
     }
 }
