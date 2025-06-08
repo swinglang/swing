@@ -1,3 +1,4 @@
+#!/usrbin/env rustc
 use std::env;
 use std::fs::{self, File};
 use std::io::{Write, BufWriter};
@@ -16,14 +17,14 @@ fn main() {
 
     let whee_file = &args[1];
 
-    // Run whee-rust and capture the output
-    let output = Command::new("whee_rust")
+    // Run wheec and capture the output
+    let output = Command::new("wheec")
         .arg(whee_file)
         .output()
-        .expect("Failed to execute whee_rust");
+        .expect("Failed to execute wheec");
 
     if !output.status.success() {
-        eprintln!("Error: whee_rust failed");
+        eprintln!("Error: wheec failed");
         std::process::exit(1);
     }
 
