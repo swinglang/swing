@@ -16,5 +16,6 @@ cd whee-installer
 ```
 2. **Run the Installer**
 ```
+chmod +x install.sh
 sudo ./install.sh
 ```
