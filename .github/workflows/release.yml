@@ -38,6 +38,7 @@ jobs:
           cargo build --release
           mv target/release/whee bin/
           mv target/release/wheec bin/
+          mv target/release/wcc bin/
 
       - name: Upload Binaries as Artifact
         uses: actions/upload-artifact@v4
