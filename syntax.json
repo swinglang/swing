@@ -53,5 +53,10 @@
       "type": "meta",
       "pattern": "^\\s*-rust\\s+(.*)$",
       "replacement": "\\1"
+    },
+    "system": {
+      "type": "function",
+      "pattern": "^\\s*system\\(\"(.+)\"\\);\\s*$",
+      "replacement": "Command::new(\"sh\").arg(\"-c\").arg(\"\\1\").status().expect(\"failed to execute command\");"
     }
 }
