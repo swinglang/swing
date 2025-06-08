@@ -12,12 +12,12 @@
     "var_string": {
         "type": "variable",
         "pattern": "let (\\w+) = \"(.*)\";",
-        "replacement": "let mut \\1 = String::from(\"\\2\");"
+        "replacement": "let \\1 = String::from(\"\\2\");"
     },
     "var_number": {
         "type": "variable",
         "pattern": "let (\\w+) = (\\d+);",
-        "replacement": "let mut \\1 = \\2;"
+        "replacement": "let \\1 = \\2;"
     },
     "ref": {
         "type": "input",
