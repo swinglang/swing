@@ -25,12 +25,13 @@ jobs:
           rm -rf bin
           mkdir -p bin
 
-      - name: 🏗️ Compile all Rust files in src/
+      - name: 🏗️ Compile
+        run: cargo build --release
+
+      - name: 📁 Move to bin
         run: |
-          for file in src/*.rs; do
-            filename=$(basename "$file" .rs)
-            rustc "$file" -o "bin/$filename"
-          done
+            mv target/release/whee bin/
+            mv target/release/wheec bin/
 
   release:
     name: 📤 Release
