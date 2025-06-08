@@ -1,23 +1,31 @@
 #!/usr/bin/env rustc
-use std::fs::File;
+use std::fs::{File, read_to_string};
 use std::io::{BufRead, BufReader};
+use std::path::Path;
 use std::process;
 use std::collections::HashMap;
 use serde_json::Value;
 use regex::Regex;
 
 const SYNTAX_FILE: &str = "/etc/whee/syntax.json";
+const MODULES_DIR: &str = "/etc/whee/modules";
 
-fn load_syntax_rules() -> HashMap<String, (Regex, String)> {
-    let file = File::open(SYNTAX_FILE).expect("Failed to open syntax file");
-    let json: Value = serde_json::from_reader(file).expect("Failed to parse JSON");
+fn load_syntax_from_file(path: &str) -> HashMap<String, (Regex, String)> {
+    let file = File::open(path).unwrap_or_else(|e| {
+        eprintln!("Failed to open syntax file '{}': {}", path, e);
+        process::exit(1);
+    });
+
+    let json: Value = serde_json::from_reader(file).unwrap_or_else(|e| {
+        eprintln!("Failed to parse JSON in '{}': {}", path, e);
+        process::exit(1);
+    });
 
     let mut rules = HashMap::new();
 
     for (key, entry) in json.as_object().unwrap() {
         let pattern = entry["pattern"].as_str().unwrap();
         let replacement = entry["replacement"].as_str().unwrap();
-
         let regex = Regex::new(pattern).unwrap();
         rules.insert(key.clone(), (regex, replacement.to_string()));
     }
@@ -25,7 +33,13 @@ fn load_syntax_rules() -> HashMap<String, (Regex, String)> {
     rules
 }
 
-fn convert_whee_to_rust(filename: &str, rules: &HashMap<String, (Regex, String)>) {
+fn merge_rules(target: &mut HashMap<String, (Regex, String)>, source: HashMap<String, (Regex, String)>) {
+    for (k, v) in source {
+        target.insert(k, v);
+    }
+}
+
+fn convert_whee_to_rust(filename: &str, rules: &mut HashMap<String, (Regex, String)>) {
     let file = File::open(filename).unwrap_or_else(|e| {
         eprintln!("Error opening Whee file: {}", e);
         process::exit(1);
@@ -35,9 +49,22 @@ fn convert_whee_to_rust(filename: &str, rules: &HashMap<String, (Regex, String)>
 
     for line in reader.lines() {
         let line = line.unwrap();
-        let mut matched = false;
 
-        for (_name, (pattern, replacement)) in rules {
+        if line.starts_with("!import ") {
+            let module_name = line.trim_start_matches("!import ").trim();
+            let module_path = format!("{}/{}/syntax.json", MODULES_DIR, module_name);
+            if Path::new(&module_path).exists() {
+                let module_rules = load_syntax_from_file(&module_path);
+                merge_rules(rules, module_rules);
+                println!("// Imported module: {}", module_name);
+            } else {
+                println!("// Module not found: {}", module_name);
+            }
+            continue;
+        }
+
+        let mut matched = false;
+        for (_name, (pattern, replacement)) in rules.iter() {
             if let Some(caps) = pattern.captures(&line) {
                 let mut output = replacement.clone();
                 for (i, cap) in caps.iter().enumerate().skip(1) {
@@ -65,6 +92,6 @@ fn main() {
     }
 
     println!("=== Converted Rust Code ===");
-    let rules = load_syntax_rules();
-    convert_whee_to_rust(&args[1], &rules);
+    let mut rules = load_syntax_from_file(SYNTAX_FILE);
+    convert_whee_to_rust(&args[1], &mut rules);
 }
