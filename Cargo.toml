@@ -15,3 +15,7 @@ path = "src/whee.rs"
 [[bin]]
 name = "wheec"
 path = "src/wheec.rs"
+
+[[bin]]
+name = "wcc"
+path = "src/wcc.rs"
