@@ -51,7 +51,7 @@
     },
     "rust_cmd": {
       "type": "meta",
-      "pattern": "^\\s*-rust\\s+(.*)$",
+      "pattern": "^\\s*-\\s+(.*)$",
       "replacement": "\\1"
     },
     "system": {
