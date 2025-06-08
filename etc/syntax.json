@@ -28,5 +28,20 @@
         "type": "function",
         "pattern": "int (\\w+) \\{",
         "replacement": "fn \\1() {"
+    },
+    "whee_marker": {
+        "type": "meta",
+        "pattern": "^=== WHEE ===$",
+        "replacement": "// Whee"
+    },
+    "empty_line": {
+        "type": "meta",
+        "pattern": "^\\s*$",
+        "replacement": ""
+    },
+    "closing_brace": {
+        "type": "syntax",
+        "pattern": "^\\}$",
+        "replacement": "}"
     }
 }
