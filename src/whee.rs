@@ -2,7 +2,7 @@
 use std::env;
 use std::fs::{self, File};
 use std::io::{Write, BufWriter};
-use std::process::{Command, Stdio};
+use std::process::Command;
 use std::path::Path;
 
 const TEMP_RUST_FILE: &str = "/tmp/whee_temp.rs";
@@ -34,12 +34,9 @@ fn main() {
     lines.next(); // Skip the header line "=== Converted Rust Code ==="
 
     let mut file = BufWriter::new(File::create(TEMP_RUST_FILE).expect("Failed to create temp Rust file"));
-    writeln!(file, "fn main() {{").unwrap();
     for line in lines {
-        writeln!(file, "    {}", line).unwrap();
+        writeln!(file, "{}", line).unwrap();
     }
-    writeln!(file, "}}").unwrap();
-
     file.flush().unwrap();
 
     // Compile the Rust code
