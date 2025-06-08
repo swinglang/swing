@@ -1,0 +1,41 @@
+name: 🐦 Compile and Release Whee
+
+on:
+  push:
+    tags:
+      - 'v*'  # Only run on version tags like v0.1.0, v1.2.3, etc.
+
+jobs:
+  build-and-release:
+    name: Compile Rust Binaries and Create Release
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up Rust
+      uses: actions/setup-rust@v1
+      with:
+        rust-version: stable
+
+    - name: Create bin/ directory
+      run: mkdir -p bin
+
+    - name: Compile all Rust files in src/
+      run: |
+        for file in src/*.rs; do
+          filename=$(basename "$file" .rs)
+          rustc "$file" -o "bin/$filename"
+        done
+
+    - name: Create GitHub Release (without uploading binaries)
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ github.ref_name }}
+        name: Release ${{ github.ref_name }}
+        body: |
+          This is an automated release of Whee.
+          Binaries have been compiled but are **not** attached to this release.
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
