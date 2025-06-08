@@ -48,5 +48,10 @@
         "type": "call",
         "pattern": "^\\s*call\\s+(\\w+)\\s*;\\s*$",
         "replacement": "\\1();"
+    },
+    "rust_cmd": {
+      "type": "meta",
+      "pattern": "^\\s*-rust\\s+(.*)$",
+      "replacement": "\\1"
     }
 }
