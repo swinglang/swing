@@ -14,15 +14,10 @@ jobs:
       - name: 📃 Checkout Repository
         uses: actions/checkout@v4
 
-      - name: 🦀 Set up Rust
-        uses: actions/setup-rust@v1
-        with:
-          rust-version: stable
-
       - name: 📝 Create bin/ directory
         run: |
-            rm -rf bin
-            mkdir -p bin
+          rm -rf bin
+          mkdir -p bin
 
       - name: 🏗️ Compile all Rust files in src/
         run: |
