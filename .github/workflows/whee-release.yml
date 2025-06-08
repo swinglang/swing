@@ -51,14 +51,6 @@ jobs:
             echo "tag_name=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: 🏷️ Create Tag (only for manual runs)
-        if: github.event_name == 'workflow_dispatch'
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@users.noreply.github.com"
-          git tag ${{ steps.get_tag.outputs.tag_name }}
-          git push origin ${{ steps.get_tag.outputs.tag_name }}
-
       - name: 📤 Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
