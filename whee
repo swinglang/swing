@@ -17,10 +17,10 @@ fn main() {
     let whee_file = &args[1];
 
     // Run whee-rust and capture the output
-    let output = Command::new("whee-rust")
+    let output = Command::new("whee_rust")
         .arg(whee_file)
         .output()
-        .expect("Failed to execute whee-rust");
+        .expect("Failed to execute whee_rust");
 
     if !output.status.success() {
         eprintln!("Error: whee-rust failed");
