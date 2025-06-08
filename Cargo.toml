@@ -1,9 +1,17 @@
 [package]
 name = "whee"
 version = "0.1.0"
-edition = "2025"
+edition = "2021"
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 regex = "1.10"
+
+[[bin]]
+name = "whee"
+path = "src/whee.rs"
+
+[[bin]]
+name = "wheec"
+path = "src/wheec.rs"
