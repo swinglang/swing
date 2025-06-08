@@ -1,4 +1,4 @@
-#!/usrbin/env rustc
+#!/usr/bin/env rustc
 use std::env;
 use std::fs::{self, File};
 use std::io::{Write, BufWriter};
