@@ -19,3 +19,8 @@ cd whee-installer
 chmod +x install.sh
 ./install.sh
 ```
+
+You can do it in a chain, like this:
+```
+git clone https://github.com/WheeLang/whee-installer.git && cd whee-installer && chmod +x install.sh && ./install.sh
+```
