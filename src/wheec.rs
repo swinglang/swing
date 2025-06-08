@@ -60,7 +60,7 @@ fn convert_whee_to_rust(filename: &str, rules: &HashMap<String, (Regex, String)>
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     if args.len() != 2 {
-        eprintln!("Usage: whee-rust <filename>");
+        eprintln!("Usage: wheec <filename>");
         process::exit(1);
     }
 
