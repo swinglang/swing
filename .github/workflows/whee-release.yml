@@ -3,7 +3,13 @@ name: 🐦 Compile and Release Whee
 on:
   push:
     tags:
-      - 'v*'  # Only run on version tags like v0.1.0, v1.2.3, etc.
+      - 'v*'  # Automatic trigger on version tags like v0.1.0, v1.2.3, etc.
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release tag (e.g., v1.2.3)'
+        required: true
+        default: 'v1.0.0'
 
 jobs:
   build:
@@ -35,11 +41,28 @@ jobs:
       - name: 📃 Checkout Repository
         uses: actions/checkout@v4
 
-      - name: 📝 Create GitHub Release
+      - name: 📝 Determine Tag Name
+        id: get_tag
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "tag_name=${{ github.event.inputs.tag_name }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag_name=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 🏷️ Create Tag (only for manual runs)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git tag ${{ steps.get_tag.outputs.tag_name }}
+          git push origin ${{ steps.get_tag.outputs.tag_name }}
+
+      - name: 📤 Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
+          tag_name: ${{ steps.get_tag.outputs.tag_name }}
+          name: Release ${{ steps.get_tag.outputs.tag_name }}
           body: |
             This is an automated release of Whee.
             Binaries have been compiled but are **not** attached to this release.
