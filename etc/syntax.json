@@ -26,7 +26,7 @@
     },
     "int": {
         "type": "function",
-        "pattern": "^\\s*int\\s+(\\w+)\\s*\\{\\s*$",
+        "pattern": "^\\s*int\\s+(\\w+)\\s*\\(\\)\\s*\\{\\s*$",
         "replacement": "fn \\1() {"
     },
     "whee_marker": {
