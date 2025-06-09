@@ -147,9 +147,6 @@ fn convert_whee_to_rust(filename: &str, rules: &mut HashMap<String, (Regex, Stri
             println!("// Unrecognized line: {}", line);
         }
     }
-
-    // Close main function
-    println!("}}");
 }
 
 fn main() {
