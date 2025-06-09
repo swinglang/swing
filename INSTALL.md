@@ -4,7 +4,7 @@ Whee can be installed and used in various ways. Here is how to get started:
 
 ### Requirements:
 
-```glibc``` (on Linux and macOS) or ```mingw-w64``` (on Windows)
+```rustc``` and ```cargo```
     
 ```git```
 
