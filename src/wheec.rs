@@ -125,13 +125,6 @@ fn convert_whee_to_rust(filename: &str, rules: &mut HashMap<String, (Regex, Stri
     for line in script_lines {
         if line.trim() == "package main;" {
             println!("// User main package start");
-            println!("fn main() {{");
-
-            // Insert module main calls (e.g., os_module();)
-            for call in &module_main_calls {
-                println!("    {}", call);
-            }
-
             continue;
         }
 
