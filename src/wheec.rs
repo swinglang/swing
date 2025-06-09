@@ -39,6 +39,33 @@ fn merge_rules(target: &mut HashMap<String, (Regex, String)>, source: HashMap<St
     }
 }
 
+fn extract_module_main_code(module_name: &str) -> Option<Vec<String>> {
+    let main_path = format!("{}/{}/main.wh", MODULES_DIR, module_name);
+    if !Path::new(&main_path).exists() {
+        return None;
+    }
+
+    let file = File::open(&main_path).ok()?;
+    let reader = BufReader::new(file);
+
+    let mut collecting = false;
+    let mut lines = Vec::new();
+
+    for line in reader.lines() {
+        let line = line.ok()?;
+        if line.trim().starts_with("package ") && line.trim().ends_with("main;") {
+            collecting = true;
+            continue;
+        }
+
+        if collecting {
+            lines.push(line);
+        }
+    }
+
+    Some(lines)
+}
+
 fn convert_whee_to_rust(filename: &str, rules: &mut HashMap<String, (Regex, String)>) {
     let file = File::open(filename).unwrap_or_else(|e| {
         eprintln!("Error opening Whee file: {}", e);
@@ -52,14 +79,42 @@ fn convert_whee_to_rust(filename: &str, rules: &mut HashMap<String, (Regex, Stri
 
         if line.starts_with("!import ") {
             let module_name = line.trim_start_matches("!import ").trim();
-            let module_path = format!("{}/{}/syntax.json", MODULES_DIR, module_name);
-            if Path::new(&module_path).exists() {
-                let module_rules = load_syntax_from_file(&module_path);
+            let module_syntax_path = format!("{}/{}/syntax.json", MODULES_DIR, module_name);
+
+            // Load and merge syntax.json if exists
+            if Path::new(&module_syntax_path).exists() {
+                let module_rules = load_syntax_from_file(&module_syntax_path);
                 merge_rules(rules, module_rules);
                 println!("// Imported module: {}", module_name);
             } else {
                 println!("// Module not found: {}", module_name);
             }
+
+            // Inject main.wh if available and has package main;
+            if let Some(main_code) = extract_module_main_code(module_name) {
+                println!("// Injected {}::main", module_name);
+                for mline in main_code {
+                    let mut matched = false;
+                    for (_name, (pattern, replacement)) in rules.iter() {
+                        if let Some(caps) = pattern.captures(&mline) {
+                            let mut output = replacement.clone();
+                            for (i, cap) in caps.iter().enumerate().skip(1) {
+                                if let Some(m) = cap {
+                                    output = output.replace(&format!("\\{}", i), m.as_str());
+                                }
+                            }
+                            println!("{}", output);
+                            matched = true;
+                            break;
+                        }
+                    }
+
+                    if !matched {
+                        println!("// Unrecognized line in module '{}': {}", module_name, mline);
+                    }
+                }
+            }
+
             continue;
         }
 
