@@ -9,18 +9,19 @@ Whee can be installed and used in various ways. Here is how to get started:
 ```git```
 
 ### From Whee Installer Repository:
-1. **Git Clone the Whee Installer Repository**
+Debian/Ubuntu/Mint:
 ```
-git clone https://github.com/WheeLang/whee-installer.git
-cd whee-installer
+git clone https://github.com/WheeLang/whee-installer.git && cd whee-installer && chmod +x install.sh && chmod +x debian.sh && ./debian.sh
 ```
-2. **Run the Installer**
+Fedora/RHEL/CentOS:
 ```
-chmod +x install.sh
-./install.sh
+git clone https://github.com/WheeLang/whee-installer.git && cd whee-installer && chmod +x install.sh && chmod +x fedora.sh && ./fedora.sh
 ```
-
-You can do it in a chain, like this:
+Arch Linux:
+```
+git clone https://github.com/WheeLang/whee-installer.git && cd whee-installer && chmod +x install.sh && chmod +x arch.sh && ./arch.sh
+```
+No Dependency Installation:
 ```
 git clone https://github.com/WheeLang/whee-installer.git && cd whee-installer && chmod +x install.sh && ./install.sh
 ```
