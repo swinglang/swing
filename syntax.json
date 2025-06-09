@@ -109,8 +109,6 @@
         "pattern": "^\\s*endthread\\s*$",
         "replacement": "});"
     },
-
-    // === NEWLY ADDED ===
     "get_args_vec": {
         "type": "variable",
         "pattern": "^\\s*let\\s+(\\w+)\\s*=\\s*args\\(\\)\\s*;\\s*$",
