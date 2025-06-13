@@ -7,8 +7,8 @@ use std::collections::HashMap;
 use serde_json::Value;
 use regex::Regex;
 
-const SYNTAX_FILE: &str = "/etc/whee/syntax.json";
-const MODULES_DIR: &str = "/etc/whee/modules";
+const SYNTAX_FILE: &str = "/opt/bitey/Whee/syntax.json";
+const MODULES_DIR: &str = "/opt/bitey/Whee/modules";
 
 fn load_syntax_from_file(path: &str) -> HashMap<String, (Regex, String)> {
     let file = File::open(path).unwrap_or_else(|e| {
