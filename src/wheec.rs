@@ -2,7 +2,7 @@
 use std::fs::{File, read_to_string};
 use std::io::{BufRead, BufReader};
 use std::path::Path;
-use std::process;
+use std::process::{self, Command};
 use std::collections::HashMap;
 use serde_json::Value;
 use regex::Regex;
@@ -72,7 +72,7 @@ fn convert_whee_to_rust(filename: &str, rules: &mut HashMap<String, (Regex, Stri
     let mut module_code_blocks = vec![];
     let mut script_lines = vec![];
 
-    // First pass: process !import and collect module code
+    // First pass: process !import and skip !insert lines
     for line in reader.lines().flatten() {
         if line.starts_with("!import ") {
             let module_name = line.trim_start_matches("!import ").trim();
@@ -91,6 +91,10 @@ fn convert_whee_to_rust(filename: &str, rules: &mut HashMap<String, (Regex, Stri
             }
 
             continue;
+        }
+
+        if line.trim().starts_with("!insert ") {
+            continue; // skip from syntax parsing
         }
 
         script_lines.push(line);
@@ -125,6 +129,30 @@ fn convert_whee_to_rust(filename: &str, rules: &mut HashMap<String, (Regex, Stri
     for line in script_lines {
         if line.trim() == "package main;" {
             println!("// User main package start");
+            continue;
+        }
+
+        if line.trim().starts_with("!insert ") {
+            let insert_path = line.trim().trim_start_matches("!insert").trim();
+
+            let output = Command::new("wheec")
+                .arg(insert_path)
+                .output()
+                .expect("Failed to execute wheec for !insert");
+
+            if !output.status.success() {
+                eprintln!("✗ wheec failed for insert file: {}", insert_path);
+                process::exit(1);
+            }
+
+            let stdout = String::from_utf8_lossy(&output.stdout);
+            for (i, line) in stdout.lines().enumerate() {
+                if i == 0 && line.trim() == "=== Converted Rust Code ===" {
+                    continue;
+                }
+                println!("{}", line);
+            }
+
             continue;
         }
 
