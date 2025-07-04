@@ -5,8 +5,9 @@ Whee can be installed and used in various ways. Here is how to get started:
 ### Requirements:
 
 - ```gcc```
-- ```g++```    
-- ```git```
+- ```g++```
+- ```libyaml-cpp0.8```
+-  ```git```
 
 ### From Whee Installer Repository:
 Debian/Ubuntu/Mint:
