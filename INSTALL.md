@@ -4,9 +4,9 @@ Whee can be installed and used in various ways. Here is how to get started:
 
 ### Requirements:
 
-```gcc```
-    
-```git```
+- ```gcc```
+- ```g++```    
+- ```git```
 
 ### From Whee Installer Repository:
 Debian/Ubuntu/Mint:
