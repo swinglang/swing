@@ -19,43 +19,43 @@ struct Rule {
 std::vector<Rule> get_rules() {
     return {
         // let var = "value";
-        {std::regex(R"(let (\w+) = "(.*?)";)"), R"(std::string \1 = "\2";)"},
+        {std::regex(R"(let (\w+) = "(.*?)";)"), std::string("std::string \\1 = \"\\2\";")},
         // let var = number;
-        {std::regex(R"(let (\w+) = (\d+);)"), R"(int \1 = \2;)"},
+        {std::regex(R"(let (\w+) = (\d+);)"), std::string("int \\1 = \\2;")},
         // ref var >> input_var;
-        {std::regex(R"(ref (\w+) >> (\w+);)"), R"(std::getline(std::cin, \2);)"},
+        {std::regex(R"(ref (\w+) >> (\w+);)"), std::string("std::getline(std::cin, \\2);")},
         // int func() {
-        {std::regex(R"(^\s*int\s+(\w+)\s*\(\)\s*\{\s*$)"), R"(int \1() {)"},
+        {std::regex(R"(^\s*int\s+(\w+)\s*\(\)\s*\{\s*$)"), std::string("int \\1() {")},
         // empty line
-        {std::regex(R"(^\s*$)"), R""},
+        {std::regex(R"(^\s*$)"), std::string("")},
         // }
-        {std::regex(R"(^\s*}\s*$)"), R"(})"},
+        {std::regex(R"(^\s*}\s*$)"), std::string("}")},
         // call func;
-        {std::regex(R"(^\s*call\s+(\w+)\s*;\s*$)"), R"(\1();)"},
+        {std::regex(R"(^\s*call\s+(\w+)\s*;\s*$)"), std::string("\\1();")},
         // -rest of line (just remove dash)
-        {std::regex(R"(^\s*-(.*)$)"), R"(\1)"},
+        {std::regex(R"(^\s*-(.*)$)"), std::string("\\1")},
         // if (condition) {
-        {std::regex(R"(^\s*if\s+\((.*?)\)\s*\{\s*$)"), R"(if (\1) {)"},
+        {std::regex(R"(^\s*if\s+\((.*?)\)\s*\{\s*$)"), std::string("if (\\1) {")},
         // else {
-        {std::regex(R"(^\s*else\s*\{\s*$)"), R"(else {)"},
+        {std::regex(R"(^\s*else\s*\{\s*$)"), std::string("else {")},
         // for var in container {
-        {std::regex(R"(^\s*for\s+(\w+)\s+in\s+(\w+)\s*\{\s*$)"), R"(for (auto& \1 : \2) {)"},
+        {std::regex(R"(^\s*for\s+(\w+)\s+in\s+(\w+)\s*\{\s*$)"), std::string("for (auto& \\1 : \\2) {")},
         // while (condition) {
-        {std::regex(R"(^\s*while\s+\((.*?)\)\s*\{\s*$)"), R"(while (\1) {)"},
+        {std::regex(R"(^\s*while\s+\((.*?)\)\s*\{\s*$)"), std::string("while (\\1) {")},
         // comment line
-        {std::regex(R"(^\s*#(.*)$)"), R"(// \1)"},
+        {std::regex(R"(^\s*#(.*)$)"), std::string("// \\1")},
         // importcpp std::something;
-        {std::regex(R"(^\s*importcpp\s+([\w:]+);\s*$)"), R"(#include <\1>)"},
+        {std::regex(R"(^\s*importcpp\s+([\w:]+);\s*$)"), std::string("#include <\\1>")},
         // importcpp std::something as alias;
-        {std::regex(R"(^\s*importcpp\s+([\w:]+)\s+as\s+(\w+);\s*$)"), R"(namespace \2 = \1;)"},
+        {std::regex(R"(^\s*importcpp\s+([\w:]+)\s+as\s+(\w+);\s*$)"), std::string("namespace \\2 = \\1;")},
         // add num1 and num2 >> var;
-        {std::regex(R"(^\s*add\s+(\d+)\s+and\s+(\d+)\s+>>\s+(\w+);$)"), R"(int \3 = \1 + \2;)"},
+        {std::regex(R"(^\s*add\s+(\d+)\s+and\s+(\d+)\s+>>\s+(\w+);$)"), std::string("int \\3 = \\1 + \\2;")},
         // return expr;
-        {std::regex(R"(^\s*return\s+(.*);$)"), R"(return \1;)"},
+        {std::regex(R"(^\s*return\s+(.*);$)"), std::string("return \\1;")},
         // thread thread_name {
-        {std::regex(R"(^\s*thread\s+(\w+)\s*\{\s*$)"), R"(std::thread \1([&]() {)"},
+        {std::regex(R"(^\s*thread\s+(\w+)\s*\{\s*$)"), std::string("std::thread \\1([&]() {")},
         // endthread
-        {std::regex(R"(^\s*endthread\s*$)"), R"(});)"}
+        {std::regex(R"(^\s*endthread\s*$)"), std::string("});")}
     };
 }
 
