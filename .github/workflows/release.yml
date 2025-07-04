@@ -26,19 +26,22 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Install Rust Compiler
+      - name: Install Build Tools
         run: |
           sudo apt update
-          sudo apt install -y rustc
+          sudo apt install -y build-essential cmake g++
 
-      - name: Compile Rust files into bin/
+      - name: Build with CMake
         run: |
-          rm -rf bin
-          mkdir -p bin
-          cargo build --release
-          mv target/release/whee bin/
-          mv target/release/wheec bin/
-          mv target/release/wcc bin/
+          rm -rf build bin
+          mkdir build
+          cd build
+          cmake ..
+          make
+          mkdir -p ../bin
+          cp wheec ../bin/
+          cp whee ../bin/
+          cp wcc ../bin/
 
       - name: Upload Binaries as Artifact
         uses: actions/upload-artifact@v4
