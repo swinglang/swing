@@ -1,73 +1,84 @@
-#!/usr/bin/env rustc
-use std::env;
-use std::fs::{self, File};
-use std::io::{Write, BufWriter};
-use std::process::Command;
-use std::path::Path;
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <cstdio>
+#include <cstdlib>
+#include <filesystem>
+#include <memory>
+#include <array>
 
-const TEMP_RUST_FILE: &str = "/tmp/whee_temp.rs";
-const TEMP_EXEC_FILE: &str = "/tmp/whee_exec";
+namespace fs = std::filesystem;
 
-fn main() {
-    let args: Vec<String> = env::args().collect();
-    if args.len() < 2 {
-        eprintln!("Usage: {} <whee_script>", args[0]);
-        std::process::exit(1);
+const std::string TEMP_CPP_FILE = "/tmp/whee_temp.cpp";
+const std::string TEMP_EXEC_FILE = "/tmp/whee_exec";
+
+int run_command(const std::string& cmd) {
+    int ret = std::system(cmd.c_str());
+    if (ret == -1) {
+        std::cerr << "Failed to run command: " << cmd << "\n";
+        return -1;
     }
-
-    let whee_file = &args[1];
-
-    // Run wheec and capture the output
-    let output = Command::new("wheec")
-        .arg(whee_file)
-        .output()
-        .expect("Failed to execute wheec");
-
-    if !output.status.success() {
-        eprintln!("Error: wheec failed");
-        std::process::exit(1);
-    }
-
-    // Write output to TEMP_RUST_FILE, skipping the first line
-    let stdout = String::from_utf8_lossy(&output.stdout);
-    let mut lines = stdout.lines();
-    lines.next(); // Skip the header line "=== Converted Rust Code ==="
-
-    let mut file = BufWriter::new(File::create(TEMP_RUST_FILE).expect("Failed to create temp Rust file"));
-    for line in lines {
-        writeln!(file, "{}", line).unwrap();
-    }
-    file.flush().unwrap();
-
-    // Compile the Rust code
-    let status = Command::new("rustc")
-        .arg(TEMP_RUST_FILE)
-        .arg("-o")
-        .arg(TEMP_EXEC_FILE)
-        .status()
-        .expect("Failed to run rustc");
-
-    if !status.success() {
-        eprintln!("Error: rustc compilation failed");
-        cleanup();
-        std::process::exit(1);
-    }
-
-    // Execute the compiled binary
-    let run_status = Command::new(TEMP_EXEC_FILE)
-        .status()
-        .expect("Failed to run compiled Whee program");
-
-    cleanup();
-
-    std::process::exit(run_status.code().unwrap_or(1));
+    return WEXITSTATUS(ret);
 }
 
-fn cleanup() {
-    if Path::new(TEMP_RUST_FILE).exists() {
-        fs::remove_file(TEMP_RUST_FILE).ok();
+std::string run_wheec_and_capture(const std::string& whee_file) {
+    std::string cmd = "wheec " + whee_file;
+    std::array<char, 128> buffer;
+    std::string result;
+
+    // Open pipe to read output
+    FILE* pipe = popen(cmd.c_str(), "r");
+    if (!pipe) {
+        std::cerr << "Failed to run wheec command.\n";
+        return "";
     }
-    if Path::new(TEMP_EXEC_FILE).exists() {
-        fs::remove_file(TEMP_EXEC_FILE).ok();
+
+    while (fgets(buffer.data(), buffer.size(), pipe) != nullptr) {
+        result += buffer.data();
     }
+    pclose(pipe);
+    return result;
+}
+
+int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        std::cerr << "Usage: " << argv[0] << " <whee_script>\n";
+        return 1;
+    }
+
+    std::string whee_file = argv[1];
+    std::string wheec_output = run_wheec_and_capture(whee_file);
+
+    if (wheec_output.empty()) {
+        std::cerr << "Error: wheec produced no output or failed.\n";
+        return 1;
+    }
+
+    // Write wheec output to temp cpp file
+    // No header line to skip now, just write all lines
+    std::ofstream cpp_file(TEMP_CPP_FILE);
+    if (!cpp_file.is_open()) {
+        std::cerr << "Failed to create temp C++ file.\n";
+        return 1;
+    }
+    cpp_file << wheec_output;
+    cpp_file.close();
+
+    // Compile with g++
+    std::string compile_cmd = "g++ " + TEMP_CPP_FILE + " -o " + TEMP_EXEC_FILE + " -pthread -std=c++17";
+    if (run_command(compile_cmd) != 0) {
+        std::cerr << "Error: g++ compilation failed.\n";
+        fs::remove(TEMP_CPP_FILE);
+        return 1;
+    }
+
+    // Run the executable
+    int exec_ret = run_command(TEMP_EXEC_FILE);
+
+    // Cleanup
+    fs::remove(TEMP_CPP_FILE);
+    fs::remove(TEMP_EXEC_FILE);
+
+    return exec_ret;
 }
