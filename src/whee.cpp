@@ -1,17 +1,15 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <vector>
-#include <cstdio>
 #include <cstdlib>
 #include <filesystem>
-#include <memory>
 #include <array>
 
 namespace fs = std::filesystem;
 
-const std::string TEMP_CPP_FILE = "/tmp/whee_temp.cpp";
-const std::string TEMP_EXEC_FILE = "/tmp/whee_exec";
+const std::string TEMP_WHEE_FILE = "/tmp/whee_repl.wh";
+const std::string TEMP_CPP_FILE = "/tmp/whee_repl.cpp";
+const std::string TEMP_EXEC_FILE = "/tmp/whee_repl_exec";
 
 int run_command(const std::string& cmd) {
     int ret = std::system(cmd.c_str());
@@ -27,7 +25,6 @@ std::string run_wheec_and_capture(const std::string& whee_file) {
     std::array<char, 128> buffer;
     std::string result;
 
-    // Open pipe to read output
     FILE* pipe = popen(cmd.c_str(), "r");
     if (!pipe) {
         std::cerr << "Failed to run wheec command.\n";
@@ -41,44 +38,70 @@ std::string run_wheec_and_capture(const std::string& whee_file) {
     return result;
 }
 
-int main(int argc, char* argv[]) {
-    if (argc < 2) {
-        std::cerr << "Usage: " << argv[0] << " <whee_script>\n";
-        return 1;
+int main() {
+    std::cout << "🐶 Whee 2.1.0\nType 'help' for help.\n";
+
+    std::string input_line;
+    while (true) {
+        std::cout << "wh> ";
+        if (!std::getline(std::cin, input_line)) break;
+
+        if (input_line == "exit" || input_line == "quit") {
+            break;
+        }
+
+        if (input_line == "help") {
+            std::cout << "Commands:\n"
+                      << "  help  - Show this help message\n"
+                      << "  exit  - Exit the shell\n"
+                      << "You can also enter Whee code lines to execute.\n";
+            continue;
+        }
+
+        // Write input_line to .wh file
+        std::ofstream whee_file(TEMP_WHEE_FILE);
+        if (!whee_file.is_open()) {
+            std::cerr << "Failed to write temp Whee file.\n";
+            continue;
+        }
+        whee_file << input_line << "\n";
+        whee_file.close();
+
+        // Run wheec to get C++ code
+        std::string cpp_code = run_wheec_and_capture(TEMP_WHEE_FILE);
+        if (cpp_code.empty()) {
+            std::cerr << "Compilation failed or no output.\n";
+            continue;
+        }
+
+        // Write C++ code to file
+        std::ofstream cpp_file(TEMP_CPP_FILE);
+        if (!cpp_file.is_open()) {
+            std::cerr << "Failed to write temp C++ file.\n";
+            continue;
+        }
+        cpp_file << cpp_code;
+        cpp_file.close();
+
+        // Compile
+        std::string compile_cmd = "g++ " + TEMP_CPP_FILE + " -o " + TEMP_EXEC_FILE + " -pthread -std=c++17";
+        if (run_command(compile_cmd) != 0) {
+            std::cerr << "g++ compilation failed.\n";
+            continue;
+        }
+
+        // Run and display output
+        std::string run_cmd = TEMP_EXEC_FILE;
+        int ret = run_command(run_cmd);
+        if (ret != 0) {
+            std::cerr << "Execution failed with exit code " << ret << "\n";
+        }
     }
 
-    std::string whee_file = argv[1];
-    std::string wheec_output = run_wheec_and_capture(whee_file);
-
-    if (wheec_output.empty()) {
-        std::cerr << "Error: wheec produced no output or failed.\n";
-        return 1;
-    }
-
-    // Write wheec output to temp cpp file
-    // No header line to skip now, just write all lines
-    std::ofstream cpp_file(TEMP_CPP_FILE);
-    if (!cpp_file.is_open()) {
-        std::cerr << "Failed to create temp C++ file.\n";
-        return 1;
-    }
-    cpp_file << wheec_output;
-    cpp_file.close();
-
-    // Compile with g++
-    std::string compile_cmd = "g++ " + TEMP_CPP_FILE + " -o " + TEMP_EXEC_FILE + " -pthread -std=c++17";
-    if (run_command(compile_cmd) != 0) {
-        std::cerr << "Error: g++ compilation failed.\n";
-        fs::remove(TEMP_CPP_FILE);
-        return 1;
-    }
-
-    // Run the executable
-    int exec_ret = run_command(TEMP_EXEC_FILE);
-
-    // Cleanup
+    // Cleanup temp files on exit
+    fs::remove(TEMP_WHEE_FILE);
     fs::remove(TEMP_CPP_FILE);
     fs::remove(TEMP_EXEC_FILE);
 
-    return exec_ret;
+    return 0;
 }
