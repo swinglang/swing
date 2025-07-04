@@ -4,7 +4,7 @@ Whee can be installed and used in various ways. Here is how to get started:
 
 ### Requirements:
 
-```rustc``` and ```cargo```
+```gcc```
     
 ```git```
 
