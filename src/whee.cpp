@@ -38,8 +38,63 @@ std::string run_wheec_and_capture(const std::string& whee_file) {
     return result;
 }
 
-int main() {
-    std::cout << "🐶 Whee 2.1.0\nType 'help' for help.\n";
+int main(int argc, char* argv[]) {
+    if (argc == 2) {
+        std::string script_path = argv[1];
+        // Check if file exists and is non-empty
+        std::ifstream script_file(script_path);
+        if (!script_file.is_open()) {
+            std::cerr << "Error: cannot open file '" << script_path << "'\n";
+            return 1;
+        }
+
+        script_file.seekg(0, std::ios::end);
+        if (script_file.tellg() == 0) {
+            // Empty file, fallback to shell
+            std::cout << "Script is empty. Starting interactive shell...\n";
+        } else {
+            // File is non-empty: run the script directly
+            script_file.close();
+
+            // Run wheec to get C++ code
+            std::string cpp_code = run_wheec_and_capture(script_path);
+            if (cpp_code.empty()) {
+                std::cerr << "Compilation failed or no output.\n";
+                return 1;
+            }
+
+            // Write C++ code to file
+            std::ofstream cpp_file(TEMP_CPP_FILE);
+            if (!cpp_file.is_open()) {
+                std::cerr << "Failed to write temp C++ file.\n";
+                return 1;
+            }
+            cpp_file << cpp_code;
+            cpp_file.close();
+
+            // Compile
+            std::string compile_cmd = "g++ " + TEMP_CPP_FILE + " -o " + TEMP_EXEC_FILE + " -pthread -std=c++17";
+            if (run_command(compile_cmd) != 0) {
+                std::cerr << "g++ compilation failed.\n";
+                return 1;
+            }
+
+            // Run executable
+            int ret = run_command(TEMP_EXEC_FILE);
+
+            // Cleanup temp files
+            fs::remove(TEMP_CPP_FILE);
+            fs::remove(TEMP_EXEC_FILE);
+
+            return ret;
+        }
+    } else if (argc > 2) {
+        std::cerr << "Usage: whee [script.wh]\n";
+        return 1;
+    }
+
+    // If no arguments or empty script, start interactive shell
+    std::cout << "🐶 Whee 2.1.1\nType 'help' for help.\n";
 
     std::string input_line;
     while (true) {
