@@ -85,7 +85,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Start interactive shell
-    std::cout << "🐶 Whee 2.1.1\nType 'help' for help.\n";
+    std::cout << "🐶 Whee 2.1.2\nType 'help' for help.\n";
     fs::remove(SHELL_IMPORTS_FILE); // Clear previous imports
     std::ofstream(SHELL_IMPORTS_FILE).close(); // Create empty file
 
