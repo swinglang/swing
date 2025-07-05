@@ -278,9 +278,7 @@ void convert_file(const std::string& filename) {
     }
 
     for (const auto& [name, lines] : modules) {
-        std::cout << "// Module: " << name << "\n";
-        for (const auto& l : lines) process_line(l);
-        std::cout << "\n";
+        for (const auto& l : lines) process_line(l); // No // Module: comment or newline
     }
 
     for (const auto& l : main_lines) {
