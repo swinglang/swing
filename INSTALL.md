@@ -1,15 +1,25 @@
-## Installation
+# Installation
 
 Whee can be installed and used in various ways. Here is how to get started:
 
-### Requirements:
+## Requirements:
 
 - ```gcc```
 - ```g++```
 - ```libyaml-cpp0.8```
 -  ```git```
 
-### From Whee Installer Repository:
+## (RECOMMENDED) Using WheeUp
+### Debian
+1. Install WheeUp
+```
+curl https://raw.githubusercontent.com/WheeLang/wheeup-installer/main/debian.sh | sudo bash
+```
+2. Install Whee
+```
+wheeup install stable
+```
+## From Whee Installer Repository:
 Debian/Ubuntu/Mint:
 ```
 git clone https://github.com/WheeLang/whee-installer.git .whee-installer && cd .whee-installer && chmod +x install.sh && chmod +x debian.sh && ./debian.sh && cd - && rm -rf .whee-installer
