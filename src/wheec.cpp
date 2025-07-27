@@ -7,7 +7,7 @@
 
 namespace fs = std::filesystem;
 
-const std::string MODULES_DIR = "/opt/bitey/Whee/modules";
+const std::string MODULES_DIR = "/bit/Whee/modules";
 
 bool starts_with(const std::string& s, const std::string& prefix) {
     return s.size() >= prefix.size() && s.compare(0, prefix.size(), prefix) == 0;
