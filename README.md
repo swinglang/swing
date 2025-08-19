@@ -1,6 +1,6 @@
 ![Swing Logo](/public/images/swing-big.png)
 
-Whee is a powerful and versatile programming language designed to help you build projects, web apps, and much more. With its built-in Web App Deployment and Automation features, you can quickly and easily deploy and automate your projects—all with the flexibility and power of Whee.
+Swing is a powerful and versatile programming language designed to help you build projects, web apps, and much more. With its built-in Web App Deployment and Automation features, you can quickly and easily deploy and automate your projects—all with the flexibility and power of Whee.
 ## Features
 - Automation: Automate complex tasks in your projects with ease.
 
