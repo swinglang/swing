@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-#include "../include/commands.h"
-#include "../include/utils.h"
+#include "commands.h"
+#include "utils.h"
 
 static bool match_print(const char *line) {
     return starts_with(trim(strdup(line)), "print(");
