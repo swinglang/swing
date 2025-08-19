@@ -1,27 +1,29 @@
 cmake_minimum_required(VERSION 3.15)
-project(WheeProject LANGUAGES CXX)
+project(WheeProject LANGUAGES C)
 
-# Set C++ standard
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+# Set C standard
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_EXTENSIONS OFF)
 
-# Enable warnings (optional but useful)
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+# Enable warnings
+if (CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
     add_compile_options(-Wall -Wextra -Wpedantic)
 elseif (MSVC)
     add_compile_options(/W4)
 endif()
 
-# Enable multithreading support
+# Enable multithreading support if needed
 find_package(Threads REQUIRED)
 
-# Define source files
-add_executable(wheec src/wheec.cpp)
+# Gather sources
+file(GLOB_RECURSE SOURCES
+    src/*.c
+    src/cmd/*.c
+)
+
+# Define single binary
+add_executable(wheec ${SOURCES})
+
+# Link with pthreads if available
 target_link_libraries(wheec PRIVATE Threads::Threads)
-
-add_executable(whee src/whee.cpp)
-target_link_libraries(whee PRIVATE Threads::Threads)
-
-add_executable(wcc src/wcc.cpp)
-target_link_libraries(wcc PRIVATE Threads::Threads)
