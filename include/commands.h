@@ -10,6 +10,6 @@ typedef struct {
     void (*emit)(const char *line, FILE *out);
 } Command;
 
-extern Command commands[];
+extern Command *commands[];
 
 #endif
