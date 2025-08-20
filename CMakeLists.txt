@@ -23,7 +23,7 @@ file(GLOB_RECURSE SOURCES
 )
 
 # Define single binary
-add_executable(wheec ${SOURCES})
+add_executable(swingc ${SOURCES})
 
 # Link with pthreads if available
 target_link_libraries(wheec PRIVATE Threads::Threads)
