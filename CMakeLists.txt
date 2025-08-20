@@ -26,4 +26,4 @@ file(GLOB_RECURSE SOURCES
 add_executable(swingc ${SOURCES})
 
 # Link with pthreads if available
-target_link_libraries(wheec PRIVATE Threads::Threads)
+target_link_libraries(swingc PRIVATE Threads::Threads)
