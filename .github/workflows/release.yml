@@ -39,9 +39,7 @@ jobs:
           cmake ..
           make
           mkdir -p ../bin
-          cp wheec ../bin/
-          cp whee ../bin/
-          cp wcc ../bin/
+          cp swingc ../bin/
 
       - name: Upload Binaries as Artifact
         uses: actions/upload-artifact@v4
