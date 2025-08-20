@@ -22,6 +22,8 @@ file(GLOB_RECURSE SOURCES
     src/cmd/*.c
 )
 
+
+
 # Define single binary
 add_executable(swingc ${SOURCES})
 
@@ -29,9 +31,6 @@ add_executable(swingc ${SOURCES})
 target_include_directories(swingc PRIVATE
     ${CMAKE_SOURCE_DIR}/include
 )
-
-# Define single binary
-add_executable(swingc ${SOURCES})
 
 # Link with pthreads if available
 target_link_libraries(swingc PRIVATE Threads::Threads)
