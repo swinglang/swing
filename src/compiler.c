@@ -4,9 +4,9 @@
 #include "utils.h"
 
 void process_line(const char *line, FILE *out) {
-    for (int i = 0; commands[i].name; i++) {
-        if (commands[i].match(line)) {
-            commands[i].emit(line, out);
+    for (int i = 0; commands[i] != NULL; i++) {
+        if (commands[i]->match(line)) {
+            commands[i]->emit(line, out);
             return;
         }
     }
