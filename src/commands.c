@@ -9,5 +9,6 @@ Command *commands[] = {
     &cmd_print,
     &cmd_let,
     &cmd_int,
+    &cmd_void,
     NULL // sentinel
 };
