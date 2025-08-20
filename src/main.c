@@ -4,7 +4,7 @@
 
 int main(int argc, char **argv) {
     if (argc != 2) {
-        fprintf(stderr, "Usage: swingc <file.wh>\n");
+        fprintf(stderr, "Usage: swingc <file.sw>\n");
         return 1;
     }
 
