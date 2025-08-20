@@ -8,6 +8,6 @@ extern Command cmd_ref;
 Command *commands[] = {
     &cmd_print,
     &cmd_let,
-    &cmd_ref,
+    &cmd_int,
     NULL // sentinel
 };
